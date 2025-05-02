@@ -1,15 +1,21 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
+        stage('Nettoyage du workspace') {
             steps {
-                echo 'Récupération du dépôt Git...'
+                cleanWs()
+            }
+        }
+        stage('Checkout SCM') {
+            steps {
                 checkout scm
             }
         }
-        stage('Lister les fichiers') {
+        stage('Build Docker Image') {
             steps {
-                sh 'ls -l'
+                script {
+                    dockerImage = docker.build("myapp-image", ".")
+                }
             }
         }
     }
